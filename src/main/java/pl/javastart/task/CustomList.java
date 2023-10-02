@@ -14,6 +14,12 @@ public class CustomList<T> {
         size = 0;
     }
 
+    private void checkCapacity() {
+        if (size == elements.length) {
+            elements = Arrays.copyOf(elements, elements.length * 2);
+        }
+    }
+
     public T get(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index out of bounds");
@@ -22,8 +28,20 @@ public class CustomList<T> {
     }
 
     public void add(T element) {
-        ensureCapacity();
+        checkCapacity();
         elements[size] = element;
+        size++;
+    }
+
+    public void add(int index, T element) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index out of bounds");
+        }
+        checkCapacity();
+        for (int i = size; i > index; i--) {        // 1 2 3 4 5
+            elements[i] = elements[i - 1];          // 1 2 * 3 4 5
+        }
+        elements[index] = element;
         size++;
     }
 
@@ -36,25 +54,11 @@ public class CustomList<T> {
             throw new IndexOutOfBoundsException("Index out of bounds");
         }
 
-        for (int i = index; i < size - 1; i++) {
-            elements[i] = elements[i + 1];
+        for (int i = index; i < size - 1; i++) {    // 1 2 3 4 5
+            elements[i] = elements[i + 1];          // 1 * 3 4 5
         }
         elements[size - 1] = null;
         size--;
-    }
-
-    public void add(int index, T element) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index out of bounds");
-        }
-
-        ensureCapacity();
-
-        for (int i = size; i > index; i--) {
-            elements[i] = elements[i - 1];
-        }
-        elements[index] = element;
-        size++;
     }
 
     @Override
@@ -62,19 +66,11 @@ public class CustomList<T> {
         if (size == 0) {
             return "[]";
         }
-
         StringBuilder builder = new StringBuilder("[");
         for (int i = 0; i < size - 1; i++) {
             builder.append(elements[i]).append(", ");
         }
         builder.append(elements[size - 1]).append("]");
         return builder.toString();
-    }
-
-    private void ensureCapacity() {
-        if (size == elements.length) {
-            int newCapacity = elements.length * 2;
-            elements = Arrays.copyOf(elements, newCapacity);
-        }
     }
 }
