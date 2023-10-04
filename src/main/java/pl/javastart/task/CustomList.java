@@ -53,12 +53,23 @@ public class CustomList<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index out of bounds");
         }
-
-        for (int i = index; i < size - 1; i++) {    // 1 2 3 4 5
-            elements[i] = elements[i + 1];          // 1 * 3 4 5
+        //Próba z uzyciem System.arraycopy
+        int newArraySize = elements.length - 1;
+        Object [] newArray = new Object [newArraySize];
+        //przypisanie elementow do miejsca indexu
+        if (index > 0) {
+            System.arraycopy(elements, 0, newArray, 0, index);
         }
-        elements[size - 1] = null;
-        size--;
+        //przypisanie reszty
+        if (index < newArraySize) {
+            System.arraycopy(elements, index + 1, newArray, index, newArraySize - index);
+        }
+        elements = Arrays.copyOf(newArray, newArraySize);
+//        for (int i = index; i < size - 1; i++) {    // 1 2 3 4 5
+//            elements[i] = elements[i + 1];          // 1 * 3 4 5
+//        }
+//        elements[size - 1] = null;
+//        size--;
     }
 
     @Override
