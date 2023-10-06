@@ -54,17 +54,11 @@ public class CustomList<T> {
             throw new IndexOutOfBoundsException("Index out of bounds");
         }
         //Próba z uzyciem System.arraycopy
-        int newArraySize = elements.length - 1;
-        Object [] newArray = new Object [newArraySize];
-        //przypisanie elementow do miejsca indexu
-        if (index > 0) {
-            System.arraycopy(elements, 0, newArray, 0, index);
+        if (index < size - 1) {
+            System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         }
-        //przypisanie reszty
-        if (index < newArraySize) {
-            System.arraycopy(elements, index + 1, newArray, index, newArraySize - index);
-        }
-        elements = Arrays.copyOf(newArray, newArraySize);
+        elements[size - 1] = null;
+        size--;
 //        for (int i = index; i < size - 1; i++) {    // 1 2 3 4 5
 //            elements[i] = elements[i + 1];          // 1 * 3 4 5
 //        }
